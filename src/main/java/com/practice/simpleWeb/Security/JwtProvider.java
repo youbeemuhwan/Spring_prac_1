@@ -86,7 +86,6 @@ public class JwtProvider {
 
         refreshTokenRepository.save(buildRefreshTokenDto.toDto(buildRefreshTokenDto));
 
-
         return refreshToken;
     }
 
@@ -140,8 +139,8 @@ public class JwtProvider {
                 return !claims.getBody().getExpiration().before(new Date()); // true : 만료, false : 유효
             }
 
-            return false;
 
+            return false;
         } catch (Exception e) {
             return false;
         }

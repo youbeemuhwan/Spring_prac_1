@@ -14,7 +14,6 @@ import java.util.Collection;
 public class CustomUserDetails implements UserDetails {
     private final Member member;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -24,7 +23,6 @@ public class CustomUserDetails implements UserDetails {
 
         return roles;
     }
-
     @Override
     public String getPassword() {
         return member.getPassword();

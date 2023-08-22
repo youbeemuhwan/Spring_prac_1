@@ -1,6 +1,7 @@
 package com.practice.simpleWeb.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,8 +24,10 @@ public class Member {
     @NotNull
     @Column(unique = true)
     private String email;
+
     @NotNull
     private String username;
+
     @NotNull
     private String password;
 
@@ -31,6 +35,10 @@ public class Member {
 
     @Embedded
     private Address address;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+
+    private List<Board> board;
 
     @Builder
     public Member(String email, String username, String password, Role role, Address address) {

@@ -25,10 +25,7 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -51,7 +48,6 @@ public class JwtProvider {
 
         claimsForAccess.put("id", member.get().getId());
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-
 
         Date now = new Date();
         String accessToken = Jwts.builder()
@@ -90,12 +86,14 @@ public class JwtProvider {
     }
 
     public Authentication getAuthentication(String access_token) {
+
         String email = getEmail(access_token);
         UserDetails userDetails = userDetailService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public String getEmail(String token) {
+
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -104,6 +102,21 @@ public class JwtProvider {
                 .getBody()
                 .getSubject();
     }
+
+
+    public Long getIdByToken(String token){
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        Object ObjectId = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id");
+        String StringId = String.valueOf(ObjectId);
+        Long id = Long.valueOf(StringId);
+        return id;
+    }
+
 
 
     public String resolveAccessToken(HttpServletRequest request) {
@@ -138,8 +151,6 @@ public class JwtProvider {
                 Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken);
                 return !claims.getBody().getExpiration().before(new Date()); // true : 만료, false : 유효
             }
-
-
             return false;
         } catch (Exception e) {
             return false;

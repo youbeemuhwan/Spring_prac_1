@@ -1,17 +1,20 @@
 package com.practice.simpleWeb.Contorller;
 
 import com.practice.simpleWeb.Dto.MemberCreateRequestDto;
+import com.practice.simpleWeb.Dto.MemberListDto;
 import com.practice.simpleWeb.Dto.MemberLoginRequestDto;
 import com.practice.simpleWeb.Dto.MemberLoginResponseDto;
 import com.practice.simpleWeb.Service.MemberService;
 import com.practice.simpleWeb.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -34,8 +37,14 @@ public class MemberController {
 
     @GetMapping("/memberList")
     @ResponseBody
-    public List<Member> list(){
-        return memberService.memberList();
+    public List<MemberListDto> list(@PageableDefault(size = 5) Pageable pageable){
+        return memberService.memberList(pageable);
     }
 
+    @DeleteMapping("/member/logout")
+    @ResponseBody
+    public String logout(Authentication authentication, HttpServletRequest request){
+        memberService.memberLogout(authentication, request);
+        return "LOGOUT DONE";
+    }
 }

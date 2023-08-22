@@ -30,6 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("엑세스 토큰이 존재할때= {}", response.getHeader("accessToken"));
         }
 
+
         if (refreshToken != null && jwtProvider.validateRefreshToken(refreshToken)) {
 
             String newAccessToken = jwtProvider.createAccessToken(jwtProvider.getEmail(refreshToken));
@@ -40,6 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("액세스 토큰이 없을때 리프레시 토큰으로 액세스 토큰 생성", response.getHeader("newAccessToken"));
             }
+
         filterChain.doFilter(request, response);
     }
 }

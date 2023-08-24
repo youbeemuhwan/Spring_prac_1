@@ -5,6 +5,7 @@ import com.practice.simpleWeb.Dto.MemberListDto;
 import com.practice.simpleWeb.Dto.MemberLoginRequestDto;
 import com.practice.simpleWeb.Dto.MemberLoginResponseDto;
 import com.practice.simpleWeb.Service.MemberService;
+import com.practice.simpleWeb.domain.Board;
 import com.practice.simpleWeb.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class MemberController {
 
     @GetMapping("/memberList")
     @ResponseBody
-    public List<MemberListDto> list(@PageableDefault(size = 5) Pageable pageable){
+    public List<Board> list(@PageableDefault(size = 5) Pageable pageable){
         return memberService.memberList(pageable);
     }
 

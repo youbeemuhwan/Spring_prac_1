@@ -26,6 +26,8 @@ public class MemberCreateRequestDto {
 
     private Address address;
 
+    private Boolean is_vip;
+
     @Builder
     public Member toEntity(MemberCreateRequestDto memberCreateRequestDto){
         return Member.builder()
@@ -34,6 +36,7 @@ public class MemberCreateRequestDto {
                 .password(memberCreateRequestDto.getPassword())
                 .role(memberCreateRequestDto.getRole())
                 .address(memberCreateRequestDto.getAddress())
+                .isVip(memberCreateRequestDto.getIs_vip())
                 .build();
     }
 

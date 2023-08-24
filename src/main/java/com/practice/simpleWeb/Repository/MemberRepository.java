@@ -3,6 +3,7 @@ package com.practice.simpleWeb.Repository;
 import com.practice.simpleWeb.domain.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
      Boolean existsByEmail(String email);
 
-
-
-
+     @Override
+     @EntityGraph(attributePaths = "board")
+     Page<Member> findAll(Pageable pageable);
 }

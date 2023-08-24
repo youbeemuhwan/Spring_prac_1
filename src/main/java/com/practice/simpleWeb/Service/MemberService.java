@@ -7,6 +7,7 @@ import com.practice.simpleWeb.Dto.MemberLoginResponseDto;
 import com.practice.simpleWeb.Repository.MemberRepository;
 import com.practice.simpleWeb.Repository.RefreshTokenRepository;
 import com.practice.simpleWeb.Security.JwtProvider;
+import com.practice.simpleWeb.domain.Board;
 import com.practice.simpleWeb.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +82,7 @@ public class MemberService {
 
         }
 
-    public List<MemberListDto> memberList(Pageable pageable){
+    public List<Board> memberList(Pageable pageable){
         Page<Member> all = memberRepository.findAll(pageable);
 
         List<MemberListDto> MemberList = new ArrayList<>();
@@ -94,10 +95,13 @@ public class MemberService {
                     .email(member.getEmail())
                     .role(member.getRole())
                     .address(member.getAddress())
+                    .is_vip(member.getIsVip())
                     .build();
             MemberList.add(buildMember);
         }
 
-        return MemberList;
+
+
+        return all.getContent().get(1).getBoard();
     }
 }

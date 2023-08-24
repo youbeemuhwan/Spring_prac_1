@@ -2,6 +2,7 @@ package com.practice.simpleWeb.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.practice.simpleWeb.Converter.BooleanConverter;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,13 +41,17 @@ public class Member {
 
     private List<Board> board;
 
+    @Convert(converter = BooleanConverter.class)
+    private Boolean isVip;
+
     @Builder
-    public Member(String email, String username, String password, Role role, Address address) {
+    public Member(String email, String username, String password, Role role, Address address, Boolean isVip) {
 
         this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;
         this.address = address;
+        this.isVip = isVip;
     }
 }

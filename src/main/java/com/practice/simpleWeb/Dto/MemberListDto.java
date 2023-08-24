@@ -22,19 +22,19 @@ public class MemberListDto {
 
     private String username;
 
-    private String password;
-
     private Role role;
 
     private Address address;
 
+    private Boolean is_vip;
+
     @Builder
-    public MemberListDto(Long id, String email, String username, String password, Role role, Address address) {
+    public MemberListDto(Long id, String email, String username,  Role role, Address address, Boolean is_vip) {
         this.id = id;
         this.email = email;
         this.username = username;
-        this.password = password;
         this.role = role;
         this.address = address;
+        this.is_vip = is_vip;
     }
 }

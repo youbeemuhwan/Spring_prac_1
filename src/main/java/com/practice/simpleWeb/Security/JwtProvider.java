@@ -6,7 +6,6 @@ import com.practice.simpleWeb.Repository.MemberRepository;
 import com.practice.simpleWeb.Repository.RefreshTokenRepository;
 import com.practice.simpleWeb.Service.UserDetailServiceImpl;
 import com.practice.simpleWeb.domain.Member;
-import com.practice.simpleWeb.domain.RefreshToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -17,13 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 

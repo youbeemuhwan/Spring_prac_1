@@ -26,15 +26,15 @@ public class MemberListDto {
 
     private Address address;
 
-    private Boolean is_vip;
+
 
     @Builder
-    public MemberListDto(Long id, String email, String username,  Role role, Address address, Boolean is_vip) {
+    public MemberListDto(Long id, String email, String username,  Role role, Address address) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.role = role;
         this.address = address;
-        this.is_vip = is_vip;
+
     }
 }

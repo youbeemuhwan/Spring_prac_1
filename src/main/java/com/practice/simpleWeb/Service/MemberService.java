@@ -42,6 +42,8 @@ public class MemberService {
         memberCreateRequestDto.setPassword(passwordEncoder.encode(memberCreateRequestDto.getPassword()));
 
         memberRepository.save(memberCreateRequestDto.toEntity(memberCreateRequestDto));
+
+
     }
 
     public MemberLoginResponseDto memberLogin(MemberLoginRequestDto memberLoginRequestDto) {
@@ -95,12 +97,9 @@ public class MemberService {
                     .email(member.getEmail())
                     .role(member.getRole())
                     .address(member.getAddress())
-                    .is_vip(member.getIsVip())
                     .build();
             MemberList.add(buildMember);
         }
-
-
 
         return all.getContent().get(1).getBoard();
     }

@@ -6,9 +6,7 @@ import com.practice.simpleWeb.Dto.MemberLoginRequestDto;
 import com.practice.simpleWeb.Dto.MemberLoginResponseDto;
 import com.practice.simpleWeb.Service.MemberService;
 import com.practice.simpleWeb.domain.Board;
-import com.practice.simpleWeb.domain.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
@@ -29,6 +27,7 @@ public class MemberController {
         memberService.memberSignUp(memberCreateRequestDto);
         return "SIGN UP DONE";
     }
+
 
     @GetMapping("/member/login")
     @ResponseBody

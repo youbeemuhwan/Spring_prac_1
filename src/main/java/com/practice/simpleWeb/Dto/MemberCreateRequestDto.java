@@ -4,10 +4,7 @@ package com.practice.simpleWeb.Dto;
 import com.practice.simpleWeb.domain.Address;
 import com.practice.simpleWeb.domain.Member;
 import com.practice.simpleWeb.domain.Role;
-import com.sun.istack.NotNull;
 import lombok.*;
-
-import javax.persistence.Column;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -26,7 +23,7 @@ public class MemberCreateRequestDto {
 
     private Address address;
 
-    private Boolean is_vip;
+
 
     @Builder
     public Member toEntity(MemberCreateRequestDto memberCreateRequestDto){
@@ -36,7 +33,6 @@ public class MemberCreateRequestDto {
                 .password(memberCreateRequestDto.getPassword())
                 .role(memberCreateRequestDto.getRole())
                 .address(memberCreateRequestDto.getAddress())
-                .isVip(memberCreateRequestDto.getIs_vip())
                 .build();
     }
 

@@ -1,6 +1,5 @@
 package com.practice.simpleWeb.Dto;
 
-import com.practice.simpleWeb.domain.Member;
 import lombok.*;
 
 @Getter

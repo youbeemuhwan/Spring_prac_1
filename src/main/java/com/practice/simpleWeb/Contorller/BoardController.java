@@ -2,7 +2,6 @@ package com.practice.simpleWeb.Contorller;
 
 import com.practice.simpleWeb.Dto.BoardDto;
 import com.practice.simpleWeb.Dto.BoardResponseDto;
-import com.practice.simpleWeb.Repository.BoardRepository;
 import com.practice.simpleWeb.Service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

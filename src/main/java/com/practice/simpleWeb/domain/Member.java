@@ -41,17 +41,15 @@ public class Member {
 
     private List<Board> board;
 
-    @Convert(converter = BooleanConverter.class)
-    private Boolean isVip;
 
     @Builder
-    public Member(String email, String username, String password, Role role, Address address, Boolean isVip) {
+    public Member(String email, String username, String password, Role role, Address address) {
 
         this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;
         this.address = address;
-        this.isVip = isVip;
+
     }
 }

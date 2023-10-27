@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtFilter(jwtProvider, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

@@ -63,12 +63,16 @@ public class MemberService {
                 .build();
     }
 
-    public void memberLogout(Authentication authentication, HttpServletRequest request){
+    public void memberLogout(HttpServletRequest request){
 
+        String refreshToken = request.getHeader("refreshToken");
 
-
-
+        if (jwtProvider.validateRefreshToken(refreshToken)){
+            String idByToken = jwtProvider.getIdByToken(refreshToken);
+            refreshTokenRepository.deleteById(idByToken);
         }
+
+    }
 
     public List<Board> memberList(Pageable pageable){
         Page<Member> all = memberRepository.findAll(pageable);

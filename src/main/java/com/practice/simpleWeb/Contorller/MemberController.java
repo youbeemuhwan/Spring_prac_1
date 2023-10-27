@@ -43,8 +43,8 @@ public class MemberController {
 
     @DeleteMapping("/member/logout")
     @ResponseBody
-    public String logout(Authentication authentication, HttpServletRequest request){
-        memberService.memberLogout(authentication, request);
+    public String logout(HttpServletRequest request){
+        memberService.memberLogout(request);
         return "LOGOUT DONE";
     }
 }

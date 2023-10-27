@@ -8,11 +8,12 @@ import javax.transaction.Transactional;
 
 @SpringBootTest
 @Transactional
-
 public class Test_jpa {
-
     @Test
     public void test_1(){
+
+
+
 
     }
 }

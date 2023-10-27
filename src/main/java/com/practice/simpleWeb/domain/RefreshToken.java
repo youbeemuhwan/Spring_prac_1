@@ -8,16 +8,18 @@ import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@RedisHash(value = "refreshToken", timeToLive = 30 * 60 * 1000L)
+@RedisHash(value = "refreshToken", timeToLive = 60 * 10L)
 public class RefreshToken {
 
     @Id
+    private String memberId;
+
+
     private String token;
 
-    private Long memberId;
 
     @Builder
-    public RefreshToken(Long memberId, String token) {
+    public RefreshToken(String memberId, String token) {
         this.memberId = memberId;
         this.token = token;
     }

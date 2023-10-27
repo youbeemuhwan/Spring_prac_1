@@ -66,21 +66,7 @@ public class MemberService {
     public void memberLogout(Authentication authentication, HttpServletRequest request){
 
 
-            String refreshToken = request.getHeader("RefreshToken");
-            log.info("asas = {}", refreshToken);
-            String email = authentication.getName();
 
-            Long idByRefreshToken = jwtProvider.getIdByToken(refreshToken);
-
-            if(!(memberRepository.findByEmail(email).orElseThrow().getId() == idByRefreshToken)){
-                throw new RuntimeException("잘못된 접근 입니다.");
-            }
-
-            if(!memberRepository.existsById(idByRefreshToken)){
-                throw new RuntimeException("잘못된 접근 입니다.");
-            }
-
-            refreshTokenRepository.deleteAllById(Collections.singleton(refreshToken));
 
         }
 

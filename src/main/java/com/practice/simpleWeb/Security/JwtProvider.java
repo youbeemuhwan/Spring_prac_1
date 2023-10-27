@@ -1,15 +1,11 @@
 package com.practice.simpleWeb.Security;
 
 import com.practice.simpleWeb.Dto.RefreshTokenCreateDto;
-import com.practice.simpleWeb.Dto.TokenInfo;
 import com.practice.simpleWeb.Repository.MemberRepository;
 import com.practice.simpleWeb.Repository.RefreshTokenRepository;
 import com.practice.simpleWeb.Service.UserDetailServiceImpl;
 import com.practice.simpleWeb.domain.Member;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +29,8 @@ public class JwtProvider {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
 
-    private final Long RefreshTokenValidTime = 1000L * 60 * 30;
-    private final Long AccessTokenValidTime = 1000L * 60 * 30;
+    private final Long RefreshTokenValidTime = 60 * 20L * 1000;
+    private final Long AccessTokenValidTime = 60 * 10L * 1000;
 
     @Value("${jwt.secret_key}")
     private String secretKey;
@@ -74,7 +70,7 @@ public class JwtProvider {
 
         RefreshTokenCreateDto buildRefreshTokenDto = RefreshTokenCreateDto.builder()
                 .token(refreshToken)
-                .memberId(member.get().getId())
+                .memberId(String.valueOf(member.get().getId()))
                 .build();
 
         refreshTokenRepository.save(buildRefreshTokenDto.toDto(buildRefreshTokenDto));
@@ -85,6 +81,13 @@ public class JwtProvider {
     public Authentication getAuthentication(String access_token) {
 
         String email = getEmail(access_token);
+        UserDetails userDetails = userDetailService.loadUserByUsername(email);
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public Authentication getAuthenticationByRefreshToken(String refresh_token) {
+
+        String email = getEmail(refresh_token);
         UserDetails userDetails = userDetailService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
@@ -101,7 +104,7 @@ public class JwtProvider {
     }
 
 
-    public Long getIdByToken(String token){
+    public String getIdByToken(String token){
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         Object ObjectId = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -109,28 +112,36 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("id");
-        String StringId = String.valueOf(ObjectId);
-        Long id = Long.valueOf(StringId);
+        String id = String.valueOf(ObjectId);
+
         return id;
     }
 
+    public HashMap<String, String> reIssue(String email){
+        String accessToken = createAccessToken(email);
+        String refreshToken = createRefreshToken(email);
+        HashMap<String, String> token = new HashMap<>();
+        token.put("accessToken", accessToken);
+        token.put("refreshToken", refreshToken);
 
+        return token;
+
+    }
 
     public String resolveAccessToken(HttpServletRequest request) {
 
-        return request.getHeader("AccessToken");
+        return request.getHeader("accessToken");
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
 
-        return request.getHeader("RefreshToken");
+        return request.getHeader("refreshToken");
     }
 
     public boolean validateAccessToken(String accessToken) {
 
         try {
-            SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
+            SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));              Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
 
             return !claims.getBody().getExpiration().before(new Date());
 
@@ -143,7 +154,8 @@ public class JwtProvider {
     public boolean validateRefreshToken(String refreshToken) {
         try {
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-            if(Objects.equals(refreshTokenRepository.findById(refreshToken).orElseThrow().getToken(), refreshToken))
+            String id = getIdByToken(refreshToken);
+            if(Objects.equals(refreshTokenRepository.findById(id).orElseThrow().getToken(), refreshToken))
             {
                 Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken);
                 return !claims.getBody().getExpiration().before(new Date()); // true : 만료, false : 유효

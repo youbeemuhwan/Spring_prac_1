@@ -12,7 +12,7 @@ public class RefreshTokenCreateDto {
 
     private String token;
 
-    private Long memberId;
+    private String memberId;
 
     public RefreshToken toDto(RefreshTokenCreateDto refreshTokenCreateDto){
         return RefreshToken.builder()

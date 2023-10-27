@@ -1,5 +1,7 @@
 package com.practice.simpleWeb.Security;
 
+
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -12,11 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -24,25 +28,28 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = jwtProvider.resolveAccessToken(request);
         String refreshToken = jwtProvider.resolveRefreshToken(request);
 
-        if (accessToken != null && jwtProvider.validateAccessToken(accessToken)) {
+        if ( jwtProvider.validateAccessToken(accessToken)) {
             Authentication authentication = jwtProvider.getAuthentication(jwtProvider.resolveAccessToken(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("엑세스 토큰이 존재할때= {}", response.getHeader("accessToken"));
+            log.info("엑세스 토큰이 존재 할때= ");
+        } else if (refreshToken.isEmpty() || !jwtProvider.validateRefreshToken(refreshToken)) {
+            log.info("엑세스 토큰 만료, 리 프레시 토큰 만료");
         }
+        else if (jwtProvider.validateRefreshToken(refreshToken)){
+            log.info("리프레시 토큰 유효, 토큰 재발급");
+            String email = jwtProvider.getEmail(refreshToken);
+            String accessToken1 = jwtProvider.createAccessToken(email);
+            String refreshToken1 = jwtProvider.createRefreshToken(email);
 
+            Authentication authentication = jwtProvider.getAuthentication(accessToken1);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (refreshToken != null && jwtProvider.validateRefreshToken(refreshToken)) {
-
-            String newAccessToken = jwtProvider.createAccessToken(jwtProvider.getEmail(refreshToken));
-            response.addHeader("accessToken", newAccessToken);
-
-                jwtProvider.validateAccessToken(newAccessToken);
-                Authentication authentication = jwtProvider.getAuthentication(newAccessToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("액세스 토큰이 없을때 리프레시 토큰으로 액세스 토큰 생성", response.getHeader("newAccessToken"));
-            }
+            response.setHeader("accessToken", accessToken1);
+            response.setHeader("refreshToken", refreshToken1);
+        }
 
         filterChain.doFilter(request, response);
     }
+
 }
 

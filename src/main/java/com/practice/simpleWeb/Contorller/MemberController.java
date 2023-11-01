@@ -37,7 +37,7 @@ public class MemberController {
 
     @GetMapping("/memberList")
     @ResponseBody
-    public List<Board> list(@PageableDefault(size = 5) Pageable pageable){
+    public List<MemberListDto> list(@PageableDefault(size = 5) Pageable pageable){
         return memberService.memberList(pageable);
     }
 

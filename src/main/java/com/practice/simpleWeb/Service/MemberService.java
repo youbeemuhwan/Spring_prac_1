@@ -64,17 +64,11 @@ public class MemberService {
     }
 
     public void memberLogout(HttpServletRequest request){
-
-        String refreshToken = request.getHeader("refreshToken");
-
-        if (jwtProvider.validateRefreshToken(refreshToken)){
-            String idByToken = jwtProvider.getIdByToken(refreshToken);
-            refreshTokenRepository.deleteById(idByToken);
-        }
+        jwtProvider.logOut(request);
 
     }
 
-    public List<Board> memberList(Pageable pageable){
+    public List<MemberListDto> memberList(Pageable pageable){
         Page<Member> all = memberRepository.findAll(pageable);
 
         List<MemberListDto> MemberList = new ArrayList<>();
@@ -91,6 +85,6 @@ public class MemberService {
             MemberList.add(buildMember);
         }
 
-        return all.getContent().get(1).getBoard();
+        return MemberList;
     }
 }

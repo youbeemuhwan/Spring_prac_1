@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
             Authentication authentication = jwtProvider.getAuthentication(jwtProvider.resolveAccessToken(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("엑세스 토큰이 존재 할때= ");
-        } else if (refreshToken.isEmpty() || !jwtProvider.validateRefreshToken(refreshToken)) {
+        } else if (refreshToken == null || refreshToken.isEmpty() || !jwtProvider.validateRefreshToken(refreshToken) ) {
             log.info("엑세스 토큰 만료, 리 프레시 토큰 만료");
         }
         else if (jwtProvider.validateRefreshToken(refreshToken)){
